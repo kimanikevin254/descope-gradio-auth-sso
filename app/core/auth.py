@@ -48,7 +48,11 @@ class Auth:
     def authenticate_and_authorize(self, request: Request) -> Optional[str]:
         path = request.url.path
         user = request.session.get("user", {})
-        roles = user.get("roles", [])
+        tenants = user.get('tenants', [])
+        roles = set()
+
+        for data in tenants.values():
+            roles.update(data.get('roles', []))
 
         # Avoid blocking the gradio queue requests
         if '/gradio_api/queue' in path and user:
@@ -65,7 +69,11 @@ class Auth:
     # Determine the Gradio app to show the user based on their roles
     def get_user_redirect_path(self, request: Request) -> str:
         user = request.session.get("user", {})
-        roles = user.get("roles", [])
+        tenants = user.get('tenants', [])
+        roles = set()
+
+        for data in tenants.values():
+            roles.update(data.get('roles', []))
         
         if not user:
             return self.settings.LOGIN_PAGE_PATH
