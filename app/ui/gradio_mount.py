@@ -3,11 +3,13 @@ from fastapi import FastAPI
 
 from app.core.auth import Auth
 from app.ui.gradio_apps import user_dashboard, admin_dashboard, login_page
+from app.core.config import Settings
 
 class GradioMounter:
-    def __init__(self, app: FastAPI, auth: Auth):
+    def __init__(self, app: FastAPI, auth: Auth, settings: Settings):
         self.app = app
         self.auth = auth
+        self.settings = settings
 
     # Mount the login demo page
     def mount_login_page(self):
@@ -17,7 +19,7 @@ class GradioMounter:
         self.app = gr.mount_gradio_app(
             self.app, 
             login_page_wrapper, 
-            path=self.auth.settings.LOGIN_PAGE_PATH
+            path=self.settings.LOGIN_PAGE_PATH
         )
 
     # Mount the admin dashboard with authorization    
@@ -28,7 +30,7 @@ class GradioMounter:
         self.app = gr.mount_gradio_app(
             self.app, 
             admin_dashboard_wrapper, 
-            path=self.auth.settings.ADMIN_DASHBOARD_PATH,
+            path=self.settings.ADMIN_DASHBOARD_PATH,
             auth_dependency=self.auth.authenticate_and_authorize
         )
 
@@ -40,7 +42,7 @@ class GradioMounter:
         self.app = gr.mount_gradio_app(
             self.app, 
             user_dashboard_wrapper, 
-            path=self.auth.settings.USER_DASHBOARD_PATH,
+            path=self.settings.USER_DASHBOARD_PATH,
             auth_dependency=self.auth.authenticate_and_authorize
         )
 
