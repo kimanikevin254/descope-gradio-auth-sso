@@ -18,13 +18,10 @@ app.add_middleware(
     max_age=settings.SESSION_MAX_AGE,
 )
 
-# Initialize auth backend
-auth.init_oauth(settings)
-
 # Include API routers
 app.include_router(auth_router.router, prefix="/auth")
 app.include_router(dashboard_router.router, prefix="")
 
 # Mount gradio apps
-gradio_mounter = GradioMounter(app, auth)
+gradio_mounter = GradioMounter(app, auth, settings)
 gradio_mounter.mount_all_apps()
