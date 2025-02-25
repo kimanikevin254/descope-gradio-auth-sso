@@ -40,7 +40,7 @@ class Auth:
     def get_current_user(self, request: Request) -> Optional[str]:
         user = request.session.get("user")
         if user:
-            return user['name']
+            return user['email']
         return None
     
     # Authenticate user and authorize based on path and roles
@@ -56,13 +56,13 @@ class Auth:
 
         # Avoid blocking the gradio queue requests
         if '/gradio_api/queue' in path and user:
-            return user['name']
+            return user['email']
 
         if user and self.settings.ADMIN_ROLE in roles and path == self.settings.ADMIN_DASHBOARD_PATH:
-            print('pass. returning', user['name'])
-            return user['name']
+            print('pass. returning', user['email'])
+            return user['email']
         elif user and path == self.settings.USER_DASHBOARD_PATH:
-            return user['name']
+            return user['email']
         else:
             return None
         
