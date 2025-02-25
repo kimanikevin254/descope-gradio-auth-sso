@@ -5,7 +5,12 @@ def load_user_dashboard(request: gr.Request):
     if not user:
         return "Hello, Guest! 👋. Once you set up auth, you will be able to view your details here.", "", gr.update(visible=False)  # Hide profile
     
-    roles = user.get('roles', [])
+    tenants = user.get('tenants', [])
+    roles = set()
+
+    for data in tenants.values():
+        roles.update(data.get('roles', []))
+        
     roles_display = ', '.join(roles) if roles else "No roles assigned"
     welcome_msg = f"Hello, {user.get('name', 'User')}! 👋"
     profile_info = f"### Here is your profile info:\n- **Email:** {user.get('email', 'N/A')}\n- **Roles:** {roles_display}"
