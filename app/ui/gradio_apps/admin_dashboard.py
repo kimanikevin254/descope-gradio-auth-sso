@@ -5,7 +5,12 @@ def load_user_dashboard(request: gr.Request):
     if not user:
         return "Hello, Guest! 👋", "", gr.update(visible=False)
     
-    roles = user.get('roles', [])
+    tenants = user.get('tenants', [])
+    roles = set()
+
+    for data in tenants.values():
+        roles.update(data.get('roles', []))
+        
     welcome_msg = f"Hello, {user.get('name', 'User')}! 👋"
     profile_info = f"### Here is your profile info:\n- **Email:** {user.get('email', 'N/A')}\n- **Roles:** {', '.join(roles)}"
     
