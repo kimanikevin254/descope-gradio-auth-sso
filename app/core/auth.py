@@ -51,8 +51,9 @@ class Auth:
         tenants = user.get('tenants', [])
         roles = set()
 
-        for data in tenants.values():
-            roles.update(data.get('roles', []))
+        if isinstance(tenants, dict):
+            for data in tenants.values():
+                roles.update(data.get('roles', []))
 
         # Avoid blocking the gradio queue requests
         if '/gradio_api/queue' in path and user:
@@ -72,8 +73,9 @@ class Auth:
         tenants = user.get('tenants', [])
         roles = set()
 
-        for data in tenants.values():
-            roles.update(data.get('roles', []))
+        if isinstance(tenants, dict):
+            for data in tenants.values():
+                roles.update(data.get('roles', []))
         
         if not user:
             return self.settings.LOGIN_PAGE_PATH

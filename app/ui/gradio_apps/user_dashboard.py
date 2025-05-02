@@ -8,8 +8,9 @@ def load_user_dashboard(request: gr.Request):
     tenants = user.get('tenants', [])
     roles = set()
 
-    for data in tenants.values():
-        roles.update(data.get('roles', []))
+    if isinstance(tenants, dict):
+        for data in tenants.values():
+            roles.update(data.get('roles', []))
         
     roles_display = ', '.join(roles) if roles else "No roles assigned"
     welcome_msg = f"Hello, {user.get('name', 'User')}! 👋"
