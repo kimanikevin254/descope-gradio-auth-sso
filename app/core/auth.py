@@ -76,6 +76,8 @@ class Auth:
         if isinstance(tenants, dict):
             for data in tenants.values():
                 roles.update(data.get('roles', []))
+        else:
+            print('You have not set up tenants in your Descope account. You can only access the user dashboard since the roles needed to access the admin dashboard are set up via the tenant.')
         
         if not user:
             return self.settings.LOGIN_PAGE_PATH
